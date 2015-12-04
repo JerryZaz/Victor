@@ -1,5 +1,5 @@
-import java.util.Random;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Udacity's Intro to Java Nanodegree Course Final Project.
@@ -23,9 +23,8 @@ public class Vicky extends Agent
     boolean middleClaimed;
 
     ArrayList<Threat> threats;
-    private int activeThreats;
-
     int suggestion;
+    private int activeThreats;
 
     /**
      * Constructs a new agent, giving it the game and telling it whether it is Red or Yellow.
@@ -214,7 +213,7 @@ public class Vicky extends Agent
         board.unplayableMove();
 
         int i = r.nextInt(myGame.getColumnCount());
-        while (getLowestEmptyIndex(myGame.getColumn(i)) == -1 || board.foundPlayableInColumn(i) == false)
+        while (getLowestEmptyIndex(myGame.getColumn(i)) == -1 || !board.foundPlayableInColumn(i))
         {
             i = r.nextInt(myGame.getColumnCount());
         }
