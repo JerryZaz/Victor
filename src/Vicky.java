@@ -42,7 +42,7 @@ public class Vicky extends Agent {
         mMiddleClaimed = false;
 
         mCheck = new BoardMatrix(game, iAmRed);
-        mThreats = mBoard.identifyThreats();
+        mThreats = Think.identifyThreats(mBoard);
     }
 
     /**
@@ -60,14 +60,18 @@ public class Vicky extends Agent {
         }
 
         mCheck = new BoardMatrix(myGame, iAmRed);
-        mThreats = mCheck.disableThreats(mThreats);
+        //mThreats = mCheck.disableThreats(mThreats);
+        mThreats = Think.disableThreats(mCheck, mThreats);
     }
 
     /**
-     * The Think method holds the key. Vicky coordinates multiple analysis on the board to determine the best possible move.
-     * It starts by claiming the middle, if it hasn't been claimed. There's no analysis here, only a check on the lowest index of the middle column.
+     * The Think method holds the key.
+     * Vicky coordinates multiple analysis on the board to determine the best possible move.
+     * It starts by claiming the middle, if it hasn't been claimed. There's no analysis here,
+     * only a check on the lowest index of the middle column.
      * Proceeds to play a winning move, if there's any. Followed by blocking a winning move, again, if there's any.
-     * If no winning or losing move has been found, different methods are run looking for patterns that could be played or should be blocked.
+     * If no winning or losing move has been found,
+     * different methods are run looking for patterns that could be played or should be blocked.
      */
 
     public void think() {
@@ -179,11 +183,13 @@ public class Vicky extends Agent {
      * @param columnNumber The column into which to drop the token.
      */
     public void moveOnColumn(int columnNumber) {
-        int lowestEmptySlotIndex = getLowestEmptyIndex(myGame.getColumn(columnNumber));   // Find the top empty slot in the column
+        // Find the top empty slot in the column
+        int lowestEmptySlotIndex = getLowestEmptyIndex(myGame.getColumn(columnNumber));
         // If the column is full, lowestEmptySlot will be -1
         if (lowestEmptySlotIndex > -1)  // if the column is not full
         {
-            Connect4Slot lowestEmptySlot = myGame.getColumn(columnNumber).getSlot(lowestEmptySlotIndex);  // get the slot in this column at this index
+            // get the slot in this column at this index
+            Connect4Slot lowestEmptySlot = myGame.getColumn(columnNumber).getSlot(lowestEmptySlotIndex);
 
             if (iAmRed) // If the current agent is the Red player...
             {
@@ -246,8 +252,9 @@ public class Vicky extends Agent {
 
     /**
      * Method that sets the number of remaining active threats.
-     * It was created for evaluation and tracking purposes, used in the method EvaluateThreats of the BoardMatrix class to verify that
-     * the threats were being sucessfully marked as inactive before evaluating.
+     * It was created for evaluation and tracking purposes, used in the method
+     * EvaluateThreats of the BoardMatrix class to verify that
+     * the threats were being successfully marked as inactive before evaluating.
      */
     private void activeThreats() {
         mActiveThreats = 0;
@@ -277,6 +284,20 @@ public class Vicky extends Agent {
         return "Vicky";
     }
 
+    /**
+     * Method created for evaluation purposes. Left here for the curious.
+     * Receives an ArrayList of Threats and prints them one by one.
+     *
+     */
+    private void printTheThreats() {
+        if (mThreats.size() > 0) {
+            for (int y = 0; y < mThreats.size(); y++) {
+                Threat toPrint = mThreats.get(y);
+                System.out.println(y + " " + toPrint.printTheThreat());
+            }
+        }
+    }
+
     private static abstract class Think {
 
         /**
@@ -289,8 +310,6 @@ public class Vicky extends Agent {
         private static Problem checkOpponentMove(BoardMatrix gameBoard, BoardMatrix checkBoard) {
             Problem opponentMove = null;
             if (Board.matchBoardSizes(gameBoard, checkBoard)) {
-                gameBoard.printTheBoard();
-                checkBoard.printTheBoard();
                 char[][] board = gameBoard.getBoard();
                 char[][] check = gameBoard.getBoard();
 
@@ -343,6 +362,93 @@ public class Vicky extends Agent {
                     gameBoard.board[lowestBlank][x] = BoardMatrix.PLAYABLE;
                 }
             }
+        }
+
+        /**
+         * When the game starts, this method scans the board initializing all possible Threats
+         * found in the board. This method is controlled by Vicky, and enabled by the Threat and
+         * the Problem class. A Problem object holds the coordinates of a slot, a Threat object holds
+         * an array of the four Problems that compose a Threat, and Vicky holds an ArrayList of Threats.
+         *
+         * @return All the possible threats
+         */
+        private static ArrayList<Threat> identifyThreats(BoardMatrix gameBoard) {
+            ArrayList<Threat> threats = new ArrayList<>();
+            for (int i = 0; i < gameBoard.getColumnCount(); i++) {
+                for (int j = 0; j < gameBoard.getRowCount(); j++) {
+                    if (j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 2][i]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 3][i]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i);
+                            Problem three = new Problem(j + 2, i);
+                            Problem four = new Problem(j + 3, i);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i + 3 < gameBoard.getColumnCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j][i + 1]
+                                && gameBoard.board[j][i] == gameBoard.board[j][i + 2]
+                                && gameBoard.board[j][i] == gameBoard.board[j][i + 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j, i + 1);
+                            Problem three = new Problem(j, i + 2);
+                            Problem four = new Problem(j, i + 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i + 3 < gameBoard.getColumnCount() && j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i + 1]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 2][i + 2]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 3][i + 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i + 1);
+                            Problem three = new Problem(j + 2, i + 2);
+                            Problem four = new Problem(j + 3, i + 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i > 2 && j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i - 1]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 2][i - 2]
+                                && gameBoard.board[j][i] == gameBoard.board[j + 3][i - 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i - 1);
+                            Problem three = new Problem(j + 2, i - 2);
+                            Problem four = new Problem(j + 3, i - 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                }
+            }
+
+            return threats;
+        }
+
+        /**
+         * After making a move, this method is called to disable all the threats solved by it.
+         * @param gameBoard The board after the move has been sent.
+         * @param threats The list of threats to be scanned.
+         * @return the list of threats updated.
+         */
+        private static ArrayList<Threat> disableThreats(BoardMatrix gameBoard, ArrayList<Threat> threats){
+            for (int i = 0; i < gameBoard.board[0].length; i++) {
+                for (int j = 0; j < gameBoard.board.length; j++) {
+                    if (gameBoard.board[j][i] == BoardMatrix.myChar) {
+                        Problem solver = new Problem(j, i);
+                        for (int x = 0; x < threats.size(); x++) {
+                            if (threats.get(x).isActive()) {
+                                if (threats.get(x).containsProblem(solver)) {
+                                    threats.get(x).setThreatLevel(0);
+                                    threats.get(x).disable();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return threats;
         }
     }
 }

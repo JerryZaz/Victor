@@ -15,8 +15,8 @@ public class Matrix extends Board {
     final static char PLAYABLE = 'P';
     final static char DRAW = 'D';
     final static char NOTWON = 'N';
-    protected char myChar;
-    protected char lookingFor;
+    protected static char myChar;
+    protected static char lookingFor;
 
     /**
      * Default constructor creates a matrix for a 7x6 board.

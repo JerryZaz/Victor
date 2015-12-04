@@ -11,9 +11,9 @@ import java.util.ArrayList;
  * @version 151006
  */
 public class BoardMatrix extends Matrix {
-    final char UNPLAYABLE = 'X';
-    final char WINNER = 'W';
-    final char THREAT = 'T';
+    final static char UNPLAYABLE = 'X';
+    final static char WINNER = 'W';
+    final static char THREAT = 'T';
     char[][] check;
     boolean foundWinningMove;
     int winInColumn;
@@ -69,63 +69,8 @@ public class BoardMatrix extends Matrix {
     }
 
     /**
-     * When the game starts, this method scans the board initializing all possible Threats
-     * found in the board. This method is controlled by Vicky, and enabled by the Threat and
-     * the Problem class. A Problem object holds the coordinates of a slot, a Threat object holds
-     * an array of the four Problems that compose a Threat, and Vicky holds an ArrayList of Threats.
-     *
-     * @return All the possible threats
-     */
-    public ArrayList<Threat> identifyThreats() {
-        ArrayList<Threat> threats = new ArrayList<>();
-        for (int i = 0; i < mLocalCopy.getColumnCount(); i++) {
-            for (int j = 0; j < mLocalCopy.getRowCount(); j++) {
-                if (j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i] && board[j][i] == board[j + 2][i] && board[j][i] == board[j + 3][i]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i);
-                        Problem three = new Problem(j + 2, i);
-                        Problem four = new Problem(j + 3, i);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i + 3 < mLocalCopy.getColumnCount()) {
-                    if (board[j][i] == board[j][i + 1] && board[j][i] == board[j][i + 2] && board[j][i] == board[j][i + 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j, i + 1);
-                        Problem three = new Problem(j, i + 2);
-                        Problem four = new Problem(j, i + 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i + 3 < mLocalCopy.getColumnCount() && j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i + 1] && board[j][i] == board[j + 2][i + 2] && board[j][i] == board[j + 3][i + 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i + 1);
-                        Problem three = new Problem(j + 2, i + 2);
-                        Problem four = new Problem(j + 3, i + 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i > 2 && j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i - 1] && board[j][i] == board[j + 2][i - 2] && board[j][i] == board[j + 3][i - 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i - 1);
-                        Problem three = new Problem(j + 2, i - 2);
-                        Problem four = new Problem(j + 3, i - 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-            }
-        }
-
-        return threats;
-    }
-
-
-    /**
      * This method takes the list of threats and evaluates the possibilities of Vicky
-     * to take advante of the board. It determines if there's a playable winning move and
+     * to take advantage of the board. It determines if there's a playable winning move and
      * passes it on to reevaluateThreats to play the winning move. It also detects not-yet-playable
      * winning threats, sends it to reevaluateThreat as a non-winning move, the missing slot is branded as
      * winner, and the position bellow is marked as unplayable to protect the winning move.
@@ -472,7 +417,7 @@ public class BoardMatrix extends Matrix {
      * @param threats Receives the threats from Vicky.
      */
     public int blockAdvance(ArrayList<Threat> threats) {
-        Problem solver = new Problem(0, 0);
+        Problem solver/* = new Problem(0, 0)*/;
         solvedThreats = 0;
         solutionsPlayed = 0;
         blockAdvanceColumn = -1;
@@ -485,19 +430,23 @@ public class BoardMatrix extends Matrix {
             if (lookingForQ == 2 //|| (myCharQ + winnerQ) == 2)
                     && (playableQ == 2 || (playableQ + blankQ == 2))) {
 
-                if (charsInThreat[0] == PLAYABLE && charsInThreat[1] == lookingFor && charsInThreat[2] == PLAYABLE && charsInThreat[3] == lookingFor) {
+                if (charsInThreat[0] == PLAYABLE && charsInThreat[1] == lookingFor
+                        && charsInThreat[2] == PLAYABLE && charsInThreat[3] == lookingFor) {
                     blockAdvanceColumn = toEvaluate.problems[2].getColumn();
                 }
-                if (charsInThreat[0] == lookingFor && charsInThreat[1] == PLAYABLE && charsInThreat[2] == lookingFor && charsInThreat[3] == PLAYABLE) {
+                if (charsInThreat[0] == lookingFor && charsInThreat[1] == PLAYABLE
+                        && charsInThreat[2] == lookingFor && charsInThreat[3] == PLAYABLE) {
                     blockAdvanceColumn = toEvaluate.problems[1].getColumn();
                 }
             }
 
             if (blockAdvanceColumn == -1) {
-                if (((lookingForQ == 2 || (myCharQ + winnerQ) == 2) && playableQ >= 1 && blankQ >= 1) && blockAdvanceColumn == -1) {
+                if ((
+                        (lookingForQ == 2 || (myCharQ + winnerQ) == 2) && playableQ >= 1 && blankQ >= 1)
+                        && blockAdvanceColumn == -1) {
 
                     int a = 0;
-                    char valueOfProblem = BLANK;
+                    char valueOfProblem/* = BLANK*/;
                     do {
                         solver = toEvaluate.problems[a];
                         valueOfProblem = getChar(solver.getRow(), solver.getColumn());
@@ -531,8 +480,12 @@ public class BoardMatrix extends Matrix {
                         mostSolutions = threatsSolvedBySolver;
                     }
 
-                    if (threatsSolvedBySolver > solvedThreats) {
+                    /*if (threatsSolvedBySolver > solvedThreats) {
                         solvedThreats = threatsSolvedBySolver;
+                        blockAdvanceColumn = solver.getColumn();
+                    }*/
+                    if(mostSolutions > solvedThreats){
+                        solvedThreats = mostSolutions;
                         blockAdvanceColumn = solver.getColumn();
                     }
                 }
@@ -587,47 +540,10 @@ public class BoardMatrix extends Matrix {
         return suggestedColumn;
     }
 
-    /**
-     * Method created for evaluation purposes. Left here for the curious.
-     * Receives an ArrayList of Threats and prints them one by one.
-     *
-     * @param threats Receives the threats from Vicky
-     */
-    public void printTheThreats(ArrayList<Threat> threats) {
-        if (threats.size() > 0) {
-            for (int y = 0; y < threats.size(); y++) {
-                Threat toPrint = threats.get(y);
-                System.out.println(y + " " + toPrint.printTheThreat());
-            }
-        }
-    }
 
 
-    /**
-     * This method checks the board for the Agent's move and disables all threats
-     * solved by it.
-     *
-     * @param threats Receives the threats from Vicky
-     * @return Sends the updated threats back to Vicky.
-     */
-    public ArrayList<Threat> disableThreats(ArrayList<Threat> threats) {
-        for (int i = 0; i < board[0].length; i++) {
-            for (int j = 0; j < board.length; j++) {
-                if (board[j][i] == myChar) {
-                    Problem solver = new Problem(j, i);
-                    for (int x = 0; x < threats.size(); x++) {
-                        if (threats.get(x).isActive()) {
-                            if (threats.get(x).containsProblem(solver)) {
-                                threats.get(x).setThreatLevel(0);
-                                threats.get(x).disable();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return threats;
-    }
+
+
 
     /**
      * Support method to make sure that Vicky doesn't play where she shouldn't.
