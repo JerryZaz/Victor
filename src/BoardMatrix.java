@@ -69,61 +69,6 @@ public class BoardMatrix extends Matrix {
     }
 
     /**
-     * When the game starts, this method scans the board initializing all possible Threats
-     * found in the board. This method is controlled by Vicky, and enabled by the Threat and
-     * the Problem class. A Problem object holds the coordinates of a slot, a Threat object holds
-     * an array of the four Problems that compose a Threat, and Vicky holds an ArrayList of Threats.
-     *
-     * @return All the possible threats
-     */
-    public ArrayList<Threat> identifyThreats() {
-        ArrayList<Threat> threats = new ArrayList<>();
-        for (int i = 0; i < mLocalCopy.getColumnCount(); i++) {
-            for (int j = 0; j < mLocalCopy.getRowCount(); j++) {
-                if (j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i] && board[j][i] == board[j + 2][i] && board[j][i] == board[j + 3][i]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i);
-                        Problem three = new Problem(j + 2, i);
-                        Problem four = new Problem(j + 3, i);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i + 3 < mLocalCopy.getColumnCount()) {
-                    if (board[j][i] == board[j][i + 1] && board[j][i] == board[j][i + 2] && board[j][i] == board[j][i + 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j, i + 1);
-                        Problem three = new Problem(j, i + 2);
-                        Problem four = new Problem(j, i + 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i + 3 < mLocalCopy.getColumnCount() && j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i + 1] && board[j][i] == board[j + 2][i + 2] && board[j][i] == board[j + 3][i + 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i + 1);
-                        Problem three = new Problem(j + 2, i + 2);
-                        Problem four = new Problem(j + 3, i + 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-                if (i > 2 && j + 3 < mLocalCopy.getRowCount()) {
-                    if (board[j][i] == board[j + 1][i - 1] && board[j][i] == board[j + 2][i - 2] && board[j][i] == board[j + 3][i - 3]) {
-                        Problem one = new Problem(j, i);
-                        Problem two = new Problem(j + 1, i - 1);
-                        Problem three = new Problem(j + 2, i - 2);
-                        Problem four = new Problem(j + 3, i - 3);
-                        threats.add(new Threat(one, two, three, four));
-                    }
-                }
-            }
-        }
-
-        return threats;
-    }
-
-
-    /**
      * This method takes the list of threats and evaluates the possibilities of Vicky
      * to take advante of the board. It determines if there's a playable winning move and
      * passes it on to reevaluateThreats to play the winning move. It also detects not-yet-playable

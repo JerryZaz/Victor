@@ -42,7 +42,7 @@ public class Vicky extends Agent {
         mMiddleClaimed = false;
 
         mCheck = new BoardMatrix(game, iAmRed);
-        mThreats = mBoard.identifyThreats();
+        mThreats = Think.identifyThreats(mBoard);
     }
 
     /**
@@ -289,8 +289,6 @@ public class Vicky extends Agent {
         private static Problem checkOpponentMove(BoardMatrix gameBoard, BoardMatrix checkBoard) {
             Problem opponentMove = null;
             if (Board.matchBoardSizes(gameBoard, checkBoard)) {
-                gameBoard.printTheBoard();
-                checkBoard.printTheBoard();
                 char[][] board = gameBoard.getBoard();
                 char[][] check = gameBoard.getBoard();
 
@@ -343,6 +341,60 @@ public class Vicky extends Agent {
                     gameBoard.board[lowestBlank][x] = BoardMatrix.PLAYABLE;
                 }
             }
+        }
+
+        /**
+         * When the game starts, this method scans the board initializing all possible Threats
+         * found in the board. This method is controlled by Vicky, and enabled by the Threat and
+         * the Problem class. A Problem object holds the coordinates of a slot, a Threat object holds
+         * an array of the four Problems that compose a Threat, and Vicky holds an ArrayList of Threats.
+         *
+         * @return All the possible threats
+         */
+        private static ArrayList<Threat> identifyThreats(BoardMatrix gameBoard) {
+            ArrayList<Threat> threats = new ArrayList<>();
+            for (int i = 0; i < gameBoard.getColumnCount(); i++) {
+                for (int j = 0; j < gameBoard.getRowCount(); j++) {
+                    if (j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i] && gameBoard.board[j][i] == gameBoard.board[j + 2][i] && gameBoard.board[j][i] == gameBoard.board[j + 3][i]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i);
+                            Problem three = new Problem(j + 2, i);
+                            Problem four = new Problem(j + 3, i);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i + 3 < gameBoard.getColumnCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j][i + 1] && gameBoard.board[j][i] == gameBoard.board[j][i + 2] && gameBoard.board[j][i] == gameBoard.board[j][i + 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j, i + 1);
+                            Problem three = new Problem(j, i + 2);
+                            Problem four = new Problem(j, i + 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i + 3 < gameBoard.getColumnCount() && j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i + 1] && gameBoard.board[j][i] == gameBoard.board[j + 2][i + 2] && gameBoard.board[j][i] == gameBoard.board[j + 3][i + 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i + 1);
+                            Problem three = new Problem(j + 2, i + 2);
+                            Problem four = new Problem(j + 3, i + 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                    if (i > 2 && j + 3 < gameBoard.getRowCount()) {
+                        if (gameBoard.board[j][i] == gameBoard.board[j + 1][i - 1] && gameBoard.board[j][i] == gameBoard.board[j + 2][i - 2] && gameBoard.board[j][i] == gameBoard.board[j + 3][i - 3]) {
+                            Problem one = new Problem(j, i);
+                            Problem two = new Problem(j + 1, i - 1);
+                            Problem three = new Problem(j + 2, i - 2);
+                            Problem four = new Problem(j + 3, i - 3);
+                            threats.add(new Threat(one, two, three, four));
+                        }
+                    }
+                }
+            }
+
+            return threats;
         }
     }
 }
