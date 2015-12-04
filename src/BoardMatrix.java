@@ -14,7 +14,6 @@ public class BoardMatrix extends Matrix
     final char UNPLAYABLE = 'X';
     final char WINNER = 'W';
     final char THREAT = 'T';
-    Connect4Game localCopy;
     char[][] check;
     boolean foundWinningMove;
     int winInColumn;
@@ -26,6 +25,7 @@ public class BoardMatrix extends Matrix
     int playOnPattern;
     int blockAdvanceColumn;
     boolean hadToRevertTheUnplayables;
+    private Connect4Game mLocalCopy;
     private int blankQ;
     private int myCharQ;
     private int lookingForQ;
@@ -42,7 +42,7 @@ public class BoardMatrix extends Matrix
      */
     public BoardMatrix(Connect4Game aGame, boolean redAgent)
     {
-        localCopy = aGame;
+        mLocalCopy = aGame;
         identifyPlayer(redAgent);
 
         /* Initializing values */
@@ -103,11 +103,11 @@ public class BoardMatrix extends Matrix
     public ArrayList<Threat> identifyThreats()
     {
         ArrayList<Threat> threats = new ArrayList<>();
-        for (int i = 0; i < localCopy.getColumnCount(); i++)
+        for (int i = 0; i < mLocalCopy.getColumnCount(); i++)
         {
-            for (int j = 0; j < localCopy.getRowCount(); j++)
+            for (int j = 0; j < mLocalCopy.getRowCount(); j++)
             {
-                if (j + 3 < localCopy.getRowCount())
+                if (j + 3 < mLocalCopy.getRowCount())
                 {
                     if(board[j][i] == board[j + 1][i] && board[j][i] == board[j + 2][i] && board[j][i] == board[j + 3][i])
                     {
@@ -118,7 +118,7 @@ public class BoardMatrix extends Matrix
                         threats.add(new Threat(one,two,three,four));
                     }
                 }
-                if (i + 3 < localCopy.getColumnCount())
+                if (i + 3 < mLocalCopy.getColumnCount())
                 {
                     if (board[j][i] == board[j][i + 1] && board[j][i] == board[j][i + 2] && board[j][i] == board[j][i + 3])
                     {
@@ -129,7 +129,7 @@ public class BoardMatrix extends Matrix
                         threats.add(new Threat(one,two,three,four));
                     }
                 }
-                if (i + 3 < localCopy.getColumnCount() && j + 3 < localCopy.getRowCount())
+                if (i + 3 < mLocalCopy.getColumnCount() && j + 3 < mLocalCopy.getRowCount())
                 {
                     if(board[j][i] == board[j + 1][i + 1] && board[j][i] == board[j + 2][i + 2] && board[j][i] == board[j + 3][i + 3])
                     {
@@ -140,7 +140,7 @@ public class BoardMatrix extends Matrix
                         threats.add(new Threat(one,two,three,four));
                     }
                 }
-                if (i > 2 && j + 3 < localCopy.getRowCount())
+                if (i > 2 && j + 3 < mLocalCopy.getRowCount())
                 {
                     if (board[j][i] == board[j + 1][i - 1] && board[j][i] == board[j + 2][i - 2] && board[j][i] == board[j + 3][i - 3])
                     {
