@@ -1,7 +1,7 @@
-import java.util.Random;
-import java.util.ArrayList;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 /**
  * Write a description of class Victor here.
@@ -213,9 +213,9 @@ public class Victor extends Agent
         if(fathers.size() > 0){
             Position father = fathers.get(0);
             Matrix fatherMatrix = father.getNode();
-            char[][] fatherBoard = fatherMatrix.board;
+            char[][] fatherBoard = fatherMatrix.getBoard();
             Matrix bestMatrix = best.getNode();
-            char[][] bestBoard = bestMatrix.board;
+            char[][] bestBoard = bestMatrix.getBoard();
 
             for(int i = 0; i < bestMatrix.getColumnCount(); i++){
                 for(int j = 0; j < bestMatrix.getRowCount(); j++){

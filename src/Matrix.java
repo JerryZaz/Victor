@@ -6,8 +6,8 @@ import java.util.ArrayList;
  * @author Henry (me@hnry.us)
  * @version (a version number or a date)
  */
-public class Matrix {
-    final static char BLANK = 'B';
+public class Matrix extends Board {
+
     final static char RED = 'R';
     final static char YELLOW = 'Y';
     final static char MOVEDFIRST = 'A';
@@ -17,10 +17,6 @@ public class Matrix {
     final static char NOTWON = 'N';
     protected char myChar;
     protected char lookingFor;
-    char[][] board;
-    private int numberOfRows;
-    private int numberOfColumns;
-    private int countOfBlanks; //write a method to calculate this
 
     /**
      * Default constructor creates a matrix for a 7x6 board.
@@ -82,19 +78,6 @@ public class Matrix {
         }
     }
 
-    /**
-     * Inserts the values of another board into this Matrix's board.
-     *
-     * @param toClone The board where the values will be extracted from.
-     */
-
-    public void copy(char[][] toClone) {
-        for (int i = 0; i < getColumnCount(); i++) {
-            for (int j = 0; j < getRowCount(); j++) {
-                board[j][i] = toClone[j][i];
-            }
-        }
-    }
 
     /**
      * Scans the board looking for the currently playable positions.
@@ -103,7 +86,7 @@ public class Matrix {
      */
     public ArrayList<Problem> getPlayables() //getLowestEmptyIndex
     {
-        ArrayList<Problem> sons = new ArrayList<Problem>();
+        ArrayList<Problem> sons = new ArrayList<>();
         for (int x = 0; x < board[0].length; x++) {
             int lowestBlank = -1;
             for (int y = 0; y < board.length; y++) {
@@ -119,23 +102,6 @@ public class Matrix {
         return sons;
     }
 
-    /**
-     * This method might return different values depending on where the method is called,
-     * as in the BoardMatrix class, not every unplayed space is tagged as blank.
-     *
-     * @return the count of spaces tagged as BLANK in the current Matrix's board.
-     */
-    public int getCountOfBlanks() {
-        countOfBlanks = 0;
-        for (int i = 0; i < getColumnCount(); i++) {
-            for (int j = 0; j < getRowCount(); j++) {
-                if (board[j][i] == BLANK) {
-                    countOfBlanks++;
-                }
-            }
-        }
-        return countOfBlanks;
-    }
 
     /**
      * Modify a single position in the current Matrix's board.
@@ -143,8 +109,8 @@ public class Matrix {
      * @param row    value of the position to be modified.
      * @param column value of the position to be modified.
      * @param move   by player to be inserted in the board.
-     * @TODO: Validate that the move received is the tag of the player to move.
      */
+    //@TODO: Validate that the move received is the tag of the player to move.
     public void modify(int row, int column, char move) {
         if (move == RED || move == YELLOW) {
             if (row < board.length && row >= 0) {
@@ -157,6 +123,7 @@ public class Matrix {
 
     /**
      * Inserts a move in a Matrix's board based on the coordinates stored in the Problem object.
+     *
      * @param seed Holds the coordinates of the position to be taken.
      * @param turn The tag to be inserted in the Matrix's board.
      */
@@ -192,6 +159,7 @@ public class Matrix {
 
     /**
      * Compares the board to another Matrix's board.
+     *
      * @param check The Matrix object to be matched against.
      * @return Whether the board's match.
      */
@@ -211,23 +179,10 @@ public class Matrix {
         return match;
     }
 
-    /**
-     * Check if the board is full.
-     * @return true if the board is full, false otherwise.
-     */
-    public boolean boardFull() {
-        for (int i = 0; i < getColumnCount(); i++) {
-            for (int j = 0; j < getRowCount(); j++) {
-                if (board[j][i] == BLANK) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
 
     /**
      * Check if the game has been won.
+     *
      * @return Any return other than NOTWON signifies that the game has been won.
      */
     public char gameWon() {
@@ -261,53 +216,6 @@ public class Matrix {
         return NOTWON;
     }
 
-    /**
-     * Clears the board by tagging all positions as BLANK.
-     */
-
-    public void clear() {
-        for (int i = 0; i < numberOfColumns; i++) {
-            for (int j = 0; j < numberOfRows; j++) {
-                board[j][i] = BLANK;
-            }
-        }
-    }
-
-    /**
-     * Retrieves the Matrix's board.
-     * @return the Matrix's board.
-     */
-
-    public char[][] getBoard() {
-        return board;
-    }
-
-    /**
-     * @TODO: Provide alternate getChar method that takes a Problem object as parameter.
-     * Get the char value stored in a position of the Matrix's board.
-     * @param row    Row index of the Problem
-     * @param column column index of the Problem
-     * @return value of a position
-     */
-    public char getChar(int row, int column) {
-        return board[row][column];
-    }
-
-    /**
-     * Support method to...
-     * @return the number of columns of the Matrix.
-     */
-    public int getColumnCount() {
-        return numberOfColumns;
-    }
-
-    /**
-     * Support method to...
-     * @return the number of Row of the Matrix.
-     */
-    public int getRowCount() {
-        return numberOfRows;
-    }
 
     /**
      * Vicky identifies herself to the Matrix class.
@@ -326,6 +234,7 @@ public class Matrix {
 
     /**
      * Support method to...
+     *
      * @return the agent's char.
      */
     public char getMyChar() {
@@ -334,24 +243,12 @@ public class Matrix {
 
     /**
      * Support method to...
+     *
      * @return the opponent's tag
      */
     public char getLookingFor() {
         return lookingFor;
     }
 
-    /**
-     * Prints the board of chars. For evaluation purposes.
-     * All calls for this method were removed before submitting the project.
-     */
-    public void printTheBoard() {
-        System.out.println();
-        for (int x = 0; x < board.length; x++) {
-            for (int y = 0; y < board[x].length; y++) {
-                System.out.print(board[x][y] + " ");
-            }
-            System.out.println();
-        }
-    }
 
 }
