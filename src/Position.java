@@ -36,8 +36,8 @@ public class Position
         node = me;
         
         this.father = father;
-        fathers = new ArrayList<Position>();
-        sons = new ArrayList<Position>();
+        fathers = new ArrayList<>();
+        sons = new ArrayList<>();
     
         positionWonByA = false;
         positionWonByB = false;
@@ -99,10 +99,10 @@ public class Position
 
     public char getResult()
     {
-        if(positionWonByA == true){
+        if(positionWonByA){
             return Matrix.MOVEDFIRST;
         }
-        else if(positionWonByB == true){
+        else if(positionWonByB){
             return Matrix.MOVEDSECOND;
         }
         else{
@@ -130,9 +130,9 @@ public class Position
     public boolean hasEnded()
     {
         boolean noMoreMoves = false;
-        if(positionWonByA == true 
-        || positionWonByB == true 
-        || positionDrawn == true){
+        if(positionWonByA
+        || positionWonByB
+        || positionDrawn){
             noMoreMoves = true;
         }
         return noMoreMoves;

@@ -6,8 +6,8 @@ import java.util.Random;
 /**
  * Write a description of class Victor here.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Henry (me@hnry.us)
+ * @version 1.0
  */
 public class Victor extends Agent
 {
@@ -31,8 +31,8 @@ public class Victor extends Agent
     {
         super(game, iAmRed);
         r = new Random();
-        playables = new ArrayList<Problem>();
-        nodes = new ArrayList<Position>();
+        playables = new ArrayList<>();
+        nodes = new ArrayList<>();
         firstFather();
         findSons();
     }

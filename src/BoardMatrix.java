@@ -102,7 +102,7 @@ public class BoardMatrix extends Matrix
      */
     public ArrayList<Threat> identifyThreats()
     {
-        ArrayList<Threat> threats = new ArrayList<Threat>();
+        ArrayList<Threat> threats = new ArrayList<>();
         for (int i = 0; i < localCopy.getColumnCount(); i++)
         {
             for (int j = 0; j < localCopy.getRowCount(); j++)
