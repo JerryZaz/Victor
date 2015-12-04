@@ -2,7 +2,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class Position here.
  * 
- * @author (your name) 
+ * @author Henry (me@hnry.us)
  * @version (a version number or a date)
  */
 public class Position
@@ -97,23 +97,6 @@ public class Position
         chanceCalculated = true;
     }
 
-    /**
-     * If the game has ended, this class will put a result mark to
-     * this position.
-     */    
-    public void setResult(char resultTag)
-    {
-        if(resultTag == Matrix.MOVEDFIRST){
-            positionWonByA = true;
-        }
-        else if(resultTag == Matrix.MOVEDSECOND){
-            positionWonByA = true;
-        }
-        else if(resultTag == Matrix.DRAW){
-            positionDrawn = true;
-        }
-    }
-
     public char getResult()
     {
         if(positionWonByA == true){
@@ -124,6 +107,23 @@ public class Position
         }
         else{
             return Matrix.DRAW;
+        }
+    }
+
+    /**
+     * If the game has ended, this class will put a result mark to
+     * this position.
+     */
+    public void setResult(char resultTag)
+    {
+        if(resultTag == Matrix.MOVEDFIRST){
+            positionWonByA = true;
+        }
+        else if(resultTag == Matrix.MOVEDSECOND){
+            positionWonByA = true;
+        }
+        else if(resultTag == Matrix.DRAW){
+            positionDrawn = true;
         }
     }
 

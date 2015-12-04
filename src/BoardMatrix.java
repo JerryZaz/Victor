@@ -11,32 +11,27 @@ import java.util.ArrayList;
  */
 public class BoardMatrix extends Matrix
 {
-    Connect4Game localCopy;
-    char[][] check;
-    
     final char UNPLAYABLE = 'X';
     final char WINNER = 'W';
     final char THREAT = 'T';
-
-    private int blankQ;
-    private int myCharQ;
-    private int lookingForQ;
-    private int playableQ;
-    private int unplayableQ;    
-    private int winnerQ;
-
+    Connect4Game localCopy;
+    char[][] check;
     boolean foundWinningMove;
     int winInColumn;
     boolean foundOpponentWinningMove;
     boolean foundAnotherOpponentWinningMove;
     int blockInColumn;
-
     int solvedThreats;
     int solutionsPlayed;
     int playOnPattern;
     int blockAdvanceColumn;
-
     boolean hadToRevertTheUnplayables;
+    private int blankQ;
+    private int myCharQ;
+    private int lookingForQ;
+    private int playableQ;
+    private int unplayableQ;
+    private int winnerQ;
 
 
     /**
@@ -706,7 +701,7 @@ public class BoardMatrix extends Matrix
      * This method checks the board for the Agent's move and disables all threats
      * solved by it.
      * 
-     * @param Receives the threats from Vicky
+     * @param threats Receives the threats from Vicky
      * @return Sends the updated threats back to Vicky.
      */
     public ArrayList<Threat> disableThreats(ArrayList<Threat> threats)
