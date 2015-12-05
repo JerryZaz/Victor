@@ -8,6 +8,15 @@ public abstract class Board {
     protected int numberOfRows;
     protected int numberOfColumns;
 
+    public static boolean matchBoardSizes(BoardMatrix one, BoardMatrix two) {
+        boolean match = false;
+        if (one.getRowCount() == two.getRowCount()
+                && one.getColumnCount() == two.getColumnCount()) {
+            match = true;
+        }
+        return match;
+    }
+
     /**
      * This method might return different values depending on where the method is called,
      * as in the BoardMatrix class, not every unplayed space is tagged as blank.
@@ -88,7 +97,7 @@ public abstract class Board {
         return board[row][column];
     }
 
-    public char getProblemChar(Problem problem){
+    public char getProblemChar(Problem problem) {
         return board[problem.getRow()][problem.getColumn()];
     }
 
